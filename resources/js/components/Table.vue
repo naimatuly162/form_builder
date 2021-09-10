@@ -2,6 +2,7 @@
     <div class="row">
         <div class="col-6">
             <h3>Question Tools</h3>
+
             <draggable
                 class="dragArea list-group"
                 :list="list1"
@@ -17,14 +18,14 @@
                         </ul>
                     </div>
                 </transition-group>-->
+
                 <transition-group>
-                    <div v-for="(element,index) in list1" :key="index">
+                    <div v-for="(element,index) in list1" :key="index" >
                         <li class="list-group-item">{{element.name}}</li>
                     </div>
                 </transition-group>
             </draggable>
         </div>
-
         <div class="col-6 ">
             <h3>Draggable 2</h3>
             <draggable
@@ -36,11 +37,15 @@
             >
                 <div class="list-group" v-for="element in list2" :key="element.id">
                     {{ element.type }}
-                    <component :is="`${element.type}_input`" :name="element.type" :select_type="element.value"
-                               :inputType="element.input_type" v-model="element.input_value">
+                    <component :is="`${element.type}_input`"
+                               :inputType="element.type" v-model="list2">
                     </component>
                 </div>
             </draggable>
+
+            <div class="col-md-6 text-end">
+                <button class="btn btn-success " :class="list2.length === 0 ? 'disabled' : ''" type="button" @click="submitForm" >Submit </button>
+            </div>
         </div>
 
     </div>
@@ -49,7 +54,7 @@
 import draggable from "vuedraggable";
 import Input from './InputText'
 import Select from './SelectList'
-import TextArea from './TextInput'
+import TextArea from './TextArea'
 
 export default {
     name: "clone",
@@ -57,10 +62,9 @@ export default {
     order: 2,
     components: {
         draggable,
-        'textInput_input':Input,
+        'text_input':Input,
         'select_input':Select,
-        'textarea_input':TextArea,
-
+        'text_area_input':TextArea,
     },
     data() {
         return {
@@ -73,30 +77,47 @@ export default {
                 // { name: "Juan", id: 5 },
                 // { name: "Edgard", id: 6 },
                 // { name: "Johnson", id: 7 }
-            ]
+            ],
         };
     },
     mounted() {
-        axios.post('/getData')
-            .then((response)=>this.list1 = this.element =response.data)
-            .catch((error)=> this.errors = error.response.data.errors)
-        console.log('mounted')
+        {
+            axios.post('/getData')
+                .then((response) => this.list1 = this.element = response.data)
+                .catch((error) => this.errors = error.response.data.errors)
+            console.log('mounted')
+        }
+        {
+            axios.post('/store',{
+                type: '',
+                title: '',
+                options:'',
+            })
+                .then((response)=>this.list2 = this.element =response.data)
+                .catch((error)=> this.errors = error.response.data.errors)
+        }
     },
     methods: {
         log: function (evt) {
             window.console.log(evt);
         },
-        cloneDog({id, name,}) {
-            console.log(id, name)
-
+        cloneDog({id, name,type}) {
+            let input_type = type;
+            if (!['text', 'select', 'text_area'].includes(input_type)) {
+                type = 'text'
+                console.log(id, name,type)
+            }
             return {
                 id: id,
-                title: '',
-                type: name,
+                title: name,
+                type: type,
                 value: 'value',
                 input_type: 'input_type',
                 input_value: '',
             };
+        },
+        submitForm(){
+
         },
     }
 };

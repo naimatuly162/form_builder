@@ -13,6 +13,6 @@ class FormBuilderSeeder extends Seeder
      */
     public function run()
     {
-        //
+
     }
 }

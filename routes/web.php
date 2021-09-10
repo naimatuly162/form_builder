@@ -20,3 +20,8 @@ Route::get('/', function () {
 Route::get('/input', [FormBuliderController::class, 'index']);
 
 Route::post('getData',[FormBuliderController::class,'getData']);
+
+Route::post('store',[FormBuliderController::class,'store']);
+
+
+Route::resource('input',FormBuliderController::class);

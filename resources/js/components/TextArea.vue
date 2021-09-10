@@ -11,7 +11,7 @@ export default {
 
     data() {
         return {
-            id         : 2,
+            id         : 3,
             text : [{
 
             }],
@@ -20,11 +20,12 @@ export default {
     methods : {
 
     },
+    mounted() {
+
+    },
     computed: {
 
-
     }
-
 
 }
 </script>
