@@ -2115,25 +2115,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Input',
+  props: ['inputType', 'select_options', 'value', 'name'],
   data: function data() {
     return {
-      id: 1,
-      text: [{
-        name: '',
-        options: ''
-      }]
+      id: 1
     };
   },
+  mounted: function mounted() {
+    console.log('lfkjlfjj');
+  },
   methods: {},
-  computed: {}
+  computed: {
+    radioInputs: {
+      get: function get() {
+        return this.options;
+      },
+      set: function set(element) {
+        console.log('dhdjhd');
+        this.$emit('input', element);
+      }
+    }
+  }
 });
 
 /***/ }),
@@ -2149,6 +2153,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _InputText__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./InputText */ "./resources/js/components/InputText.vue");
 //
 //
 //
@@ -2193,20 +2198,33 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Select',
-  props: ['inputType'],
+  components: {
+    Input: _InputText__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  props: ['inputType', 'select_options', 'value', 'name'],
   data: function data() {
     return {
-      id: 2,
-      radioInputs: []
+      id: 2
     };
   },
   methods: {},
   mounted: function mounted() {
-    console.log('jhjfjh', this.inputType);
+    console.log('jhjfjh');
   },
-  computed: {}
+  computed: {
+    radioInputs: {
+      get: function get() {
+        return this.options;
+      },
+      set: function set(element) {
+        console.log('dhdjhd');
+        this.$emit('input', element);
+      }
+    }
+  }
 });
 
 /***/ }),
@@ -2279,6 +2297,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 
@@ -2288,6 +2308,7 @@ __webpack_require__.r(__webpack_exports__);
   display: "Clone",
   order: 2,
   components: {
+    Input: _InputText__WEBPACK_IMPORTED_MODULE_1__["default"],
     draggable: (vuedraggable__WEBPACK_IMPORTED_MODULE_0___default()),
     'text_input': _InputText__WEBPACK_IMPORTED_MODULE_1__["default"],
     'select_input': _SelectList__WEBPACK_IMPORTED_MODULE_2__["default"],
@@ -2315,18 +2336,11 @@ __webpack_require__.r(__webpack_exports__);
         return _this.errors = error.response.data.errors;
       });
       console.log('mounted');
-    }
-    {
-      axios.post('/store', {
-        type: '',
-        title: '',
-        options: ''
-      }).then(function (response) {
-        return _this.list2 = _this.element = response.data;
-      })["catch"](function (error) {
-        return _this.errors = error.response.data.errors;
-      });
-    }
+    } // axios.post('/store',this.$data.list2)
+    //     .then((response )=>  {
+    //         console.log(response);
+    //     })
+    //     .catch((error)=> this.errors= error.response.data.errors)
   },
   methods: {
     log: function log(evt) {
@@ -2335,24 +2349,42 @@ __webpack_require__.r(__webpack_exports__);
     cloneDog: function cloneDog(_ref) {
       var id = _ref.id,
           name = _ref.name,
-          type = _ref.type;
+          type = _ref.type,
+          value = _ref.value;
       var input_type = type;
 
       if (!['text', 'select', 'text_area'].includes(input_type)) {
         type = 'text';
-        console.log(id, name, type);
+        console.log(id, name, type, value);
       }
 
       return {
         id: id,
         title: name,
         type: type,
-        value: 'value',
-        input_type: 'input_type',
-        input_value: ''
+        value: '',
+        options: '',
+        input_type: input_type
       };
     },
-    submitForm: function submitForm() {}
+    texting: function texting(e) {
+      console.log('gh', e);
+      this.list2[0].options = e; // axios.post('/store',this.list2)
+      //     .then((response)=>  {
+      //         console.log(response);
+      //     })
+      //     .catch((error)=> this.errors= error.response.data.errors)
+    },
+    submitForm: function submitForm() {
+      var _this2 = this;
+
+      //  this.$emit('input_type', this.list2)
+      axios.post('/store', this.list2).then(function (response) {
+        console.log(response);
+      })["catch"](function (error) {
+        return _this2.errors = error.response.data.errors;
+      });
+    }
   }
 });
 
@@ -2378,6 +2410,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'TextArea',
+  props: ['inputType', 'select_options', 'value'],
   data: function data() {
     return {
       id: 3,
@@ -2386,7 +2419,17 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {},
   mounted: function mounted() {},
-  computed: {}
+  computed: {
+    radioInputs: {
+      get: function get() {
+        return this.value;
+      },
+      set: function set(element) {
+        console.log('dhdjhd');
+        this.$emit('input', element);
+      }
+    }
+  }
 });
 
 /***/ }),
@@ -42021,54 +42064,24 @@ var render = function() {
           {
             name: "model",
             rawName: "v-model",
-            value: _vm.text.name,
-            expression: "text.name"
+            value: _vm.radioInputs,
+            expression: "radioInputs"
           }
         ],
         staticClass: "form-control",
         attrs: { type: "text", id: "form1", placeholder: "type name" },
-        domProps: { value: _vm.text.name },
+        domProps: { value: _vm.radioInputs },
         on: {
           input: function($event) {
             if ($event.target.composing) {
               return
             }
-            _vm.$set(_vm.text, "name", $event.target.value)
+            _vm.radioInputs = $event.target.value
           }
         }
       }),
       _vm._v(" "),
-      _c("label", { staticClass: "form-label", attrs: { for: "form1" } }, [
-        _vm._v("Name: " + _vm._s(_vm.text.name))
-      ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "form-outline" }, [
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.text.options,
-            expression: "text.options"
-          }
-        ],
-        staticClass: "form-control",
-        attrs: { type: "text", id: "form2", placeholder: "select options" },
-        domProps: { value: _vm.text.options },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.$set(_vm.text, "options", $event.target.value)
-          }
-        }
-      }),
-      _vm._v(" "),
-      _c("label", { staticClass: "form-label", attrs: { for: "form2" } }, [
-        _vm._v("Options: " + _vm._s(_vm.text.options))
-      ])
+      _c("label", { staticClass: "form-label", attrs: { for: "form1" } })
     ])
   ])
 }
@@ -42426,10 +42439,10 @@ var render = function() {
             attrs: { list: _vm.list2, group: "people", "item-key": "name" },
             on: { change: _vm.log }
           },
-          _vm._l(_vm.list2, function(element) {
+          _vm._l(_vm.list2, function(element, index) {
             return _c(
               "div",
-              { key: element.id, staticClass: "list-group" },
+              { key: element.index, staticClass: "list-group" },
               [
                 _vm._v(
                   "\n                    " +
@@ -42438,15 +42451,42 @@ var render = function() {
                 ),
                 _c(element.type + "_input", {
                   tag: "component",
-                  attrs: { inputType: element.type },
+                  attrs: { name: element.type, inputType: element.input_type },
+                  on: { abc: _vm.texting },
                   model: {
-                    value: _vm.list2,
+                    value: element.value,
                     callback: function($$v) {
-                      _vm.list2 = $$v
+                      _vm.$set(element, "value", $$v)
                     },
-                    expression: "list2"
+                    expression: "element.value"
                   }
-                })
+                }),
+                _vm._v(" "),
+                _c("div", [
+                  ["radio", "select", "check"].includes(element.input_type)
+                    ? _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: element.options,
+                            expression: "element.options"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "text" },
+                        domProps: { value: element.options },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(element, "options", $event.target.value)
+                          }
+                        }
+                      })
+                    : _vm._e()
+                ])
               ],
               1
             )

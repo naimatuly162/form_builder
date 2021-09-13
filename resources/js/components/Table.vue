@@ -2,7 +2,6 @@
     <div class="row">
         <div class="col-6">
             <h3>Question Tools</h3>
-
             <draggable
                 class="dragArea list-group"
                 :list="list1"
@@ -35,14 +34,17 @@
                 @change="log"
                 item-key="name"
             >
-                <div class="list-group" v-for="element in list2" :key="element.id">
+                <div class="list-group" v-for="(element,index) in list2" :key="element.index">
                     {{ element.type }}
-                    <component :is="`${element.type}_input`"
-                               :inputType="element.type" v-model="list2">
+                    <component :is="`${element.type}_input`" :name="element.type"
+                                :inputType="element.input_type" v-model="element.value"  @abc="texting">
                     </component>
+                    <div>
+                        <input v-if="['radio', 'select','check'].includes(element.input_type)" type="text" v-model="element.options" class="form-control">
+                    </div>
+
                 </div>
             </draggable>
-
             <div class="col-md-6 text-end">
                 <button class="btn btn-success " :class="list2.length === 0 ? 'disabled' : ''" type="button" @click="submitForm" >Submit </button>
             </div>
@@ -61,6 +63,7 @@ export default {
     display: "Clone",
     order: 2,
     components: {
+        Input,
         draggable,
         'text_input':Input,
         'select_input':Select,
@@ -87,37 +90,49 @@ export default {
                 .catch((error) => this.errors = error.response.data.errors)
             console.log('mounted')
         }
-        {
-            axios.post('/store',{
-                type: '',
-                title: '',
-                options:'',
-            })
-                .then((response)=>this.list2 = this.element =response.data)
-                .catch((error)=> this.errors = error.response.data.errors)
-        }
+        // axios.post('/store',this.$data.list2)
+        //     .then((response )=>  {
+        //         console.log(response);
+        //     })
+        //     .catch((error)=> this.errors= error.response.data.errors)
     },
     methods: {
         log: function (evt) {
             window.console.log(evt);
         },
-        cloneDog({id, name,type}) {
+        cloneDog({id, name,type,value}) {
             let input_type = type;
             if (!['text', 'select', 'text_area'].includes(input_type)) {
                 type = 'text'
-                console.log(id, name,type)
+                console.log(id, name,type,value)
             }
             return {
                 id: id,
                 title: name,
                 type: type,
-                value: 'value',
-                input_type: 'input_type',
-                input_value: '',
+                value: '',
+                options:'',
+                input_type: input_type,
             };
+        },
+        texting(e){
+            console.log('gh', e)
+            this.list2[0].options=e
+            // axios.post('/store',this.list2)
+            //     .then((response)=>  {
+            //         console.log(response);
+            //     })
+            //     .catch((error)=> this.errors= error.response.data.errors)
         },
         submitForm(){
 
+          //  this.$emit('input_type', this.list2)
+
+            axios.post('/store',this.list2)
+               .then((response)=>  {
+                   console.log(response);
+               })
+               .catch((error)=> this.errors= error.response.data.errors)
         },
     }
 };

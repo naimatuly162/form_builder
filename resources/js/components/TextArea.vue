@@ -8,6 +8,7 @@
 <script>
 export default {
     name: 'TextArea',
+    props: ['inputType','select_options', 'value'],
 
     data() {
         return {
@@ -24,7 +25,15 @@ export default {
 
     },
     computed: {
-
+        radioInputs: {
+            get() {
+                return this.value;
+            },
+            set(element) {
+                console.log('dhdjhd')
+                this.$emit('input', element)
+            }
+        },
     }
 
 }

@@ -25,3 +25,8 @@ Route::post('store',[FormBuliderController::class,'store']);
 
 
 Route::resource('input',FormBuliderController::class);
+//Route::get('/store', function () {
+//    return 'flklfk';
+//});
+Route::get('/user', [UserController::class, 'index']);
+

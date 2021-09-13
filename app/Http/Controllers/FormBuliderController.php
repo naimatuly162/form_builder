@@ -27,12 +27,18 @@ class FormBuliderController extends Controller
       }
     public function store(InputRequest $request)
     {
-        //return $request->all();
-        $user = new InputType();
-        $user->type = $request->input('type');
-        $user->title = $request->input('title');
-        $user->options = $request->input('options');
-        $user->save();
+        $data = $request->all();
+        foreach ($data as $row){
+            $user = new InputType();
+            $user->type = $row['input_type'];
+            $user->title = $row['title'];
+            $user->options = $row['options'];
+            $user->save();
+        }
+
+        return $user;
     }
+
+
 
 }

@@ -1,6 +1,6 @@
 <template>
 
-    <div v-if="inputType==='radio'">
+   <div v-if="inputType==='radio'">
         <div class="form-check" v-for="element in radioInputs" v-model="radioInputs">
             <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
             <label class="form-check-label" for="flexRadioDefault1">
@@ -43,21 +43,36 @@
 
 </template>
 <script>
+import Input from "./InputText";
 export default {
     name: 'Select',
-    props: ['inputType'],
+    components: {Input},
+    props: ['inputType','select_options', 'value','name'],
 
     data() {
         return {
             id: 2,
-            radioInputs: [],
         }
     },
     methods: {},
     mounted() {
-        console.log('jhjfjh', this.inputType)
+        console.log('jhjfjh')
     },
-    computed: {},
+    computed:
+        {
+        radioInputs: {
+
+            get() {
+
+                return this.options;
+
+            },
+            set(element) {
+                console.log('dhdjhd')
+                this.$emit('input', element)
+            }
+        },
+    },
 
 }
 </script>
