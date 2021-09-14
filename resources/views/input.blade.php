@@ -13,6 +13,11 @@
 
 <div id="app">
 
+{{--    @php( $users = DB::table('form_names')->get())--}}
+{{--    <div class="container">--}}
+{{--       <h2>{{$users->name}} </h2>--}}
+{{--    </div>--}}
+
     <div class="container">
         <router-view></router-view>
     </div>

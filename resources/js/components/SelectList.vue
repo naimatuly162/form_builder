@@ -1,15 +1,15 @@
 <template>
 
-   <div v-if="inputType==='radio'">
-        <div class="form-check" v-for="element in radioInputs" v-model="radioInputs">
+    <div class="list-group">
+        <div v-if="inputType==='radio'" >
+        <div v-for="element in radioInputs" v-model="radioInputs">
             <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
             <label class="form-check-label" for="flexRadioDefault1">
             </label>
         </div>
-        <span>Checked names: {{ radioInputs }}</span>
     </div>
 
-    <div v-else-if=" inputType === 'check' ">
+    <div v-else-if=" inputType === 'checkbox' " >
         <input type="checkbox" id="jack" value="Jack" v-model="radioInputs">
         <label for="jack">Jack</label>
         <input type="checkbox" id="john" value="John" v-model="radioInputs">
@@ -20,7 +20,7 @@
         <span>Checked names: {{ radioInputs }}</span>
     </div>
 
-    <div v-else-if="inputType==='select'">
+    <div v-else-if="inputType==='select'" >
         <select v-model="radioInputs">
             <option disabled value="">Please select one</option>
             <option>A</option>
@@ -30,9 +30,9 @@
         <span>Selected: {{ radioInputs }}</span>
     </div>
 
-    <div v-else>
+    <div  v-else>
         <p>{{ inputType }}</p>
-        <select v-model="radioInputs" :type="inputType" class="form-control">
+        <select v-model="radioInputs" :type="inputType" >
             <option disabled value="">Please select one</option>
             <option>A</option>
             <option>B</option>
@@ -40,6 +40,8 @@
         </select>
         <span>Selected: {{ radioInputs }}</span>
     </div>
+    </div>
+
 
 </template>
 <script>
@@ -47,7 +49,7 @@ import Input from "./InputText";
 export default {
     name: 'Select',
     components: {Input},
-    props: ['inputType','select_options', 'value','name'],
+    props: ['inputType','options', 'value','name'],
 
     data() {
         return {

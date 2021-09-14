@@ -27,17 +27,23 @@ class FormBuliderController extends Controller
       }
     public function store(InputRequest $request)
     {
-        $data = $request->all();
-        foreach ($data as $row){
+        $data = $request->questions;
+       $form= FormBuilder::create(['name'=>$request->form_title]);
+
+
+          foreach ($data as $row){
             $user = new InputType();
             $user->type = $row['input_type'];
             $user->title = $row['title'];
             $user->options = $row['options'];
+            $user->form_id = $form->id;
             $user->save();
         }
-
         return $user;
     }
+
+
+
 
 
 

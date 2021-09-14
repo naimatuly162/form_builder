@@ -2117,7 +2117,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Input',
-  props: ['inputType', 'select_options', 'value', 'name'],
+  props: ['inputType', 'options', 'value', 'name'],
   data: function data() {
     return {
       id: 1
@@ -2198,13 +2198,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Select',
   components: {
     Input: _InputText__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  props: ['inputType', 'select_options', 'value', 'name'],
+  props: ['inputType', 'options', 'value', 'name'],
   data: function data() {
     return {
       id: 2
@@ -2299,6 +2301,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2312,7 +2334,7 @@ __webpack_require__.r(__webpack_exports__);
     draggable: (vuedraggable__WEBPACK_IMPORTED_MODULE_0___default()),
     'text_input': _InputText__WEBPACK_IMPORTED_MODULE_1__["default"],
     'select_input': _SelectList__WEBPACK_IMPORTED_MODULE_2__["default"],
-    'text_area_input': _TextArea__WEBPACK_IMPORTED_MODULE_3__["default"]
+    'textarea_input': _TextArea__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
   data: function data() {
     return {
@@ -2323,7 +2345,8 @@ __webpack_require__.r(__webpack_exports__);
       list2: [// { name: "Juan", id: 5 },
         // { name: "Edgard", id: 6 },
         // { name: "Johnson", id: 7 }
-      ]
+      ],
+      formTitle: ''
     };
   },
   mounted: function mounted() {
@@ -2336,16 +2359,24 @@ __webpack_require__.r(__webpack_exports__);
         return _this.errors = error.response.data.errors;
       });
       console.log('mounted');
-    } // axios.post('/store',this.$data.list2)
-    //     .then((response )=>  {
-    //         console.log(response);
-    //     })
-    //     .catch((error)=> this.errors= error.response.data.errors)
+    }
+    axios.post('/getInput').then(function (response) {
+      return _this.list2 = _this.element = response.data;
+    } // console.log(response);
+    )["catch"](function (error) {
+      return _this.errors = error.response.data.errors;
+    });
   },
   methods: {
     log: function log(evt) {
       window.console.log(evt);
     },
+    // vClone({id, form_name}) {
+    //     return {
+    //         id: id,
+    //        form_name: '',
+    //     };
+    // },
     cloneDog: function cloneDog(_ref) {
       var id = _ref.id,
           name = _ref.name,
@@ -2353,7 +2384,7 @@ __webpack_require__.r(__webpack_exports__);
           value = _ref.value;
       var input_type = type;
 
-      if (!['text', 'select', 'text_area'].includes(input_type)) {
+      if (!['text', 'select', 'textarea'].includes(input_type)) {
         type = 'text';
         console.log(id, name, type, value);
       }
@@ -2379,11 +2410,18 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       //  this.$emit('input_type', this.list2)
-      axios.post('/store', this.list2).then(function (response) {
+      var formData = {
+        'form_title': this.formTitle,
+        'questions': this.list2
+      };
+      axios.post('/store', formData).then(function (response) {
         console.log(response);
       })["catch"](function (error) {
         return _this2.errors = error.response.data.errors;
       });
+    },
+    deleteItem: function deleteItem(id) {
+      this.list2.splice(id, 1);
     }
   }
 });
@@ -2410,7 +2448,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'TextArea',
-  props: ['inputType', 'select_options', 'value'],
+  props: ['inputType', 'options', 'value'],
   data: function data() {
     return {
       id: 3,
@@ -42058,31 +42096,29 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("div", { staticClass: "form-outline" }, [
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.radioInputs,
-            expression: "radioInputs"
-          }
-        ],
-        staticClass: "form-control",
-        attrs: { type: "text", id: "form1", placeholder: "type name" },
-        domProps: { value: _vm.radioInputs },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.radioInputs = $event.target.value
-          }
+    _c("input", {
+      directives: [
+        {
+          name: "model",
+          rawName: "v-model",
+          value: _vm.radioInputs,
+          expression: "radioInputs"
         }
-      }),
-      _vm._v(" "),
-      _c("label", { staticClass: "form-label", attrs: { for: "form1" } })
-    ])
+      ],
+      staticClass: "form-control",
+      attrs: { type: "text", id: "form1", placeholder: "type name" },
+      domProps: { value: _vm.radioInputs },
+      on: {
+        input: function($event) {
+          if ($event.target.composing) {
+            return
+          }
+          _vm.radioInputs = $event.target.value
+        }
+      }
+    }),
+    _vm._v(" "),
+    _c("label", { staticClass: "form-label", attrs: { for: "form1" } })
   ])
 }
 var staticRenderFns = []
@@ -42108,15 +42144,14 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.inputType === "radio"
-    ? _c(
-        "div",
-        [
+  return _c("div", { staticClass: "list-group" }, [
+    _vm.inputType === "radio"
+      ? _c(
+          "div",
           _vm._l(_vm.radioInputs, function(element) {
             return _c(
               "div",
               {
-                staticClass: "form-check",
                 model: {
                   value: _vm.radioInputs,
                   callback: function($$v) {
@@ -42142,228 +42177,225 @@ var render = function() {
               ]
             )
           }),
+          0
+        )
+      : _vm.inputType === "checkbox"
+      ? _c("div", [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.radioInputs,
+                expression: "radioInputs"
+              }
+            ],
+            attrs: { type: "checkbox", id: "jack", value: "Jack" },
+            domProps: {
+              checked: Array.isArray(_vm.radioInputs)
+                ? _vm._i(_vm.radioInputs, "Jack") > -1
+                : _vm.radioInputs
+            },
+            on: {
+              change: function($event) {
+                var $$a = _vm.radioInputs,
+                  $$el = $event.target,
+                  $$c = $$el.checked ? true : false
+                if (Array.isArray($$a)) {
+                  var $$v = "Jack",
+                    $$i = _vm._i($$a, $$v)
+                  if ($$el.checked) {
+                    $$i < 0 && (_vm.radioInputs = $$a.concat([$$v]))
+                  } else {
+                    $$i > -1 &&
+                      (_vm.radioInputs = $$a
+                        .slice(0, $$i)
+                        .concat($$a.slice($$i + 1)))
+                  }
+                } else {
+                  _vm.radioInputs = $$c
+                }
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("label", { attrs: { for: "jack" } }, [_vm._v("Jack")]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.radioInputs,
+                expression: "radioInputs"
+              }
+            ],
+            attrs: { type: "checkbox", id: "john", value: "John" },
+            domProps: {
+              checked: Array.isArray(_vm.radioInputs)
+                ? _vm._i(_vm.radioInputs, "John") > -1
+                : _vm.radioInputs
+            },
+            on: {
+              change: function($event) {
+                var $$a = _vm.radioInputs,
+                  $$el = $event.target,
+                  $$c = $$el.checked ? true : false
+                if (Array.isArray($$a)) {
+                  var $$v = "John",
+                    $$i = _vm._i($$a, $$v)
+                  if ($$el.checked) {
+                    $$i < 0 && (_vm.radioInputs = $$a.concat([$$v]))
+                  } else {
+                    $$i > -1 &&
+                      (_vm.radioInputs = $$a
+                        .slice(0, $$i)
+                        .concat($$a.slice($$i + 1)))
+                  }
+                } else {
+                  _vm.radioInputs = $$c
+                }
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("label", { attrs: { for: "john" } }, [_vm._v("John")]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.radioInputs,
+                expression: "radioInputs"
+              }
+            ],
+            attrs: { type: "checkbox", id: "mike", value: "Mike" },
+            domProps: {
+              checked: Array.isArray(_vm.radioInputs)
+                ? _vm._i(_vm.radioInputs, "Mike") > -1
+                : _vm.radioInputs
+            },
+            on: {
+              change: function($event) {
+                var $$a = _vm.radioInputs,
+                  $$el = $event.target,
+                  $$c = $$el.checked ? true : false
+                if (Array.isArray($$a)) {
+                  var $$v = "Mike",
+                    $$i = _vm._i($$a, $$v)
+                  if ($$el.checked) {
+                    $$i < 0 && (_vm.radioInputs = $$a.concat([$$v]))
+                  } else {
+                    $$i > -1 &&
+                      (_vm.radioInputs = $$a
+                        .slice(0, $$i)
+                        .concat($$a.slice($$i + 1)))
+                  }
+                } else {
+                  _vm.radioInputs = $$c
+                }
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("label", { attrs: { for: "mike" } }, [_vm._v("Mike")]),
+          _vm._v(" "),
+          _c("br"),
           _vm._v(" "),
           _c("span", [_vm._v("Checked names: " + _vm._s(_vm.radioInputs))])
-        ],
-        2
-      )
-    : _vm.inputType === "check"
-    ? _c("div", [
-        _c("input", {
-          directives: [
+        ])
+      : _vm.inputType === "select"
+      ? _c("div", [
+          _c(
+            "select",
             {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.radioInputs,
-              expression: "radioInputs"
-            }
-          ],
-          attrs: { type: "checkbox", id: "jack", value: "Jack" },
-          domProps: {
-            checked: Array.isArray(_vm.radioInputs)
-              ? _vm._i(_vm.radioInputs, "Jack") > -1
-              : _vm.radioInputs
-          },
-          on: {
-            change: function($event) {
-              var $$a = _vm.radioInputs,
-                $$el = $event.target,
-                $$c = $$el.checked ? true : false
-              if (Array.isArray($$a)) {
-                var $$v = "Jack",
-                  $$i = _vm._i($$a, $$v)
-                if ($$el.checked) {
-                  $$i < 0 && (_vm.radioInputs = $$a.concat([$$v]))
-                } else {
-                  $$i > -1 &&
-                    (_vm.radioInputs = $$a
-                      .slice(0, $$i)
-                      .concat($$a.slice($$i + 1)))
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.radioInputs,
+                  expression: "radioInputs"
                 }
-              } else {
-                _vm.radioInputs = $$c
+              ],
+              on: {
+                change: function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.radioInputs = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                }
               }
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c("label", { attrs: { for: "jack" } }, [_vm._v("Jack")]),
-        _vm._v(" "),
-        _c("input", {
-          directives: [
+            },
+            [
+              _c("option", { attrs: { disabled: "", value: "" } }, [
+                _vm._v("Please select one")
+              ]),
+              _vm._v(" "),
+              _c("option", [_vm._v("A")]),
+              _vm._v(" "),
+              _c("option", [_vm._v("B")]),
+              _vm._v(" "),
+              _c("option", [_vm._v("C")])
+            ]
+          ),
+          _vm._v(" "),
+          _c("span", [_vm._v("Selected: " + _vm._s(_vm.radioInputs))])
+        ])
+      : _c("div", [
+          _c("p", [_vm._v(_vm._s(_vm.inputType))]),
+          _vm._v(" "),
+          _c(
+            "select",
             {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.radioInputs,
-              expression: "radioInputs"
-            }
-          ],
-          attrs: { type: "checkbox", id: "john", value: "John" },
-          domProps: {
-            checked: Array.isArray(_vm.radioInputs)
-              ? _vm._i(_vm.radioInputs, "John") > -1
-              : _vm.radioInputs
-          },
-          on: {
-            change: function($event) {
-              var $$a = _vm.radioInputs,
-                $$el = $event.target,
-                $$c = $$el.checked ? true : false
-              if (Array.isArray($$a)) {
-                var $$v = "John",
-                  $$i = _vm._i($$a, $$v)
-                if ($$el.checked) {
-                  $$i < 0 && (_vm.radioInputs = $$a.concat([$$v]))
-                } else {
-                  $$i > -1 &&
-                    (_vm.radioInputs = $$a
-                      .slice(0, $$i)
-                      .concat($$a.slice($$i + 1)))
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.radioInputs,
+                  expression: "radioInputs"
                 }
-              } else {
-                _vm.radioInputs = $$c
-              }
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c("label", { attrs: { for: "john" } }, [_vm._v("John")]),
-        _vm._v(" "),
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.radioInputs,
-              expression: "radioInputs"
-            }
-          ],
-          attrs: { type: "checkbox", id: "mike", value: "Mike" },
-          domProps: {
-            checked: Array.isArray(_vm.radioInputs)
-              ? _vm._i(_vm.radioInputs, "Mike") > -1
-              : _vm.radioInputs
-          },
-          on: {
-            change: function($event) {
-              var $$a = _vm.radioInputs,
-                $$el = $event.target,
-                $$c = $$el.checked ? true : false
-              if (Array.isArray($$a)) {
-                var $$v = "Mike",
-                  $$i = _vm._i($$a, $$v)
-                if ($$el.checked) {
-                  $$i < 0 && (_vm.radioInputs = $$a.concat([$$v]))
-                } else {
-                  $$i > -1 &&
-                    (_vm.radioInputs = $$a
-                      .slice(0, $$i)
-                      .concat($$a.slice($$i + 1)))
+              ],
+              attrs: { type: _vm.inputType },
+              on: {
+                change: function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.radioInputs = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
                 }
-              } else {
-                _vm.radioInputs = $$c
               }
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c("label", { attrs: { for: "mike" } }, [_vm._v("Mike")]),
-        _vm._v(" "),
-        _c("br"),
-        _vm._v(" "),
-        _c("span", [_vm._v("Checked names: " + _vm._s(_vm.radioInputs))])
-      ])
-    : _vm.inputType === "select"
-    ? _c("div", [
-        _c(
-          "select",
-          {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.radioInputs,
-                expression: "radioInputs"
-              }
-            ],
-            on: {
-              change: function($event) {
-                var $$selectedVal = Array.prototype.filter
-                  .call($event.target.options, function(o) {
-                    return o.selected
-                  })
-                  .map(function(o) {
-                    var val = "_value" in o ? o._value : o.value
-                    return val
-                  })
-                _vm.radioInputs = $event.target.multiple
-                  ? $$selectedVal
-                  : $$selectedVal[0]
-              }
-            }
-          },
-          [
-            _c("option", { attrs: { disabled: "", value: "" } }, [
-              _vm._v("Please select one")
-            ]),
-            _vm._v(" "),
-            _c("option", [_vm._v("A")]),
-            _vm._v(" "),
-            _c("option", [_vm._v("B")]),
-            _vm._v(" "),
-            _c("option", [_vm._v("C")])
-          ]
-        ),
-        _vm._v(" "),
-        _c("span", [_vm._v("Selected: " + _vm._s(_vm.radioInputs))])
-      ])
-    : _c("div", [
-        _c("p", [_vm._v(_vm._s(_vm.inputType))]),
-        _vm._v(" "),
-        _c(
-          "select",
-          {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.radioInputs,
-                expression: "radioInputs"
-              }
-            ],
-            staticClass: "form-control",
-            attrs: { type: _vm.inputType },
-            on: {
-              change: function($event) {
-                var $$selectedVal = Array.prototype.filter
-                  .call($event.target.options, function(o) {
-                    return o.selected
-                  })
-                  .map(function(o) {
-                    var val = "_value" in o ? o._value : o.value
-                    return val
-                  })
-                _vm.radioInputs = $event.target.multiple
-                  ? $$selectedVal
-                  : $$selectedVal[0]
-              }
-            }
-          },
-          [
-            _c("option", { attrs: { disabled: "", value: "" } }, [
-              _vm._v("Please select one")
-            ]),
-            _vm._v(" "),
-            _c("option", [_vm._v("A")]),
-            _vm._v(" "),
-            _c("option", [_vm._v("B")]),
-            _vm._v(" "),
-            _c("option", [_vm._v("C")])
-          ]
-        ),
-        _vm._v(" "),
-        _c("span", [_vm._v("Selected: " + _vm._s(_vm.radioInputs))])
-      ])
+            },
+            [
+              _c("option", { attrs: { disabled: "", value: "" } }, [
+                _vm._v("Please select one")
+              ]),
+              _vm._v(" "),
+              _c("option", [_vm._v("A")]),
+              _vm._v(" "),
+              _c("option", [_vm._v("B")]),
+              _vm._v(" "),
+              _c("option", [_vm._v("C")])
+            ]
+          ),
+          _vm._v(" "),
+          _c("span", [_vm._v("Selected: " + _vm._s(_vm.radioInputs))])
+        ])
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -42411,11 +42443,15 @@ var render = function() {
             _c(
               "transition-group",
               _vm._l(_vm.list1, function(element, index) {
-                return _c("div", { key: index }, [
-                  _c("li", { staticClass: "list-group-item" }, [
-                    _vm._v(_vm._s(element.name))
-                  ])
-                ])
+                return _c(
+                  "div",
+                  { key: index, staticClass: "panel panel-default" },
+                  [
+                    _c("li", { staticClass: "list-group-item" }, [
+                      _vm._v(_vm._s(element.name))
+                    ])
+                  ]
+                )
               }),
               0
             )
@@ -42430,7 +42466,31 @@ var render = function() {
       "div",
       { staticClass: "col-6 " },
       [
-        _c("h3", [_vm._v("Draggable 2")]),
+        _c("h3", [_vm._v("Questions Paper")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "mb-5" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.formTitle,
+                expression: "formTitle"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: { placeholder: "type options" },
+            domProps: { value: _vm.formTitle },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.formTitle = $event.target.value
+              }
+            }
+          })
+        ]),
         _vm._v(" "),
         _c(
           "draggable",
@@ -42442,69 +42502,114 @@ var render = function() {
           _vm._l(_vm.list2, function(element, index) {
             return _c(
               "div",
-              { key: element.index, staticClass: "list-group" },
+              {
+                key: element.index,
+                staticClass: "list-group",
+                staticStyle: { "margin-bottom": "15px" }
+              },
               [
-                _vm._v(
-                  "\n                    " +
-                    _vm._s(element.type) +
-                    "\n                    "
-                ),
-                _c(element.type + "_input", {
-                  tag: "component",
-                  attrs: { name: element.type, inputType: element.input_type },
-                  on: { abc: _vm.texting },
-                  model: {
-                    value: element.value,
-                    callback: function($$v) {
-                      _vm.$set(element, "value", $$v)
-                    },
-                    expression: "element.value"
-                  }
-                }),
-                _vm._v(" "),
-                _c("div", [
-                  ["radio", "select", "check"].includes(element.input_type)
-                    ? _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: element.options,
-                            expression: "element.options"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: { type: "text" },
-                        domProps: { value: element.options },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
+                _c(
+                  "li",
+                  { staticClass: "list-group-item" },
+                  [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "d-flex justify-content-between",
+                        staticStyle: { "margin-bottom": "15px" }
+                      },
+                      [
+                        _c("h5", [_vm._v(_vm._s(element.type))]),
+                        _vm._v(" "),
+                        _c("div", [
+                          _c(
+                            "span",
+                            {
+                              staticClass: "text-danger",
+                              attrs: { "aria-label": "close" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.deleteItem(index)
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "fa fa-trash" })]
+                          )
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(element.type + "_input", {
+                      tag: "component",
+                      attrs: {
+                        name: element.type,
+                        inputType: element.input_type
+                      },
+                      on: { abc: _vm.texting },
+                      model: {
+                        value: element.value,
+                        callback: function($$v) {
+                          _vm.$set(element, "value", $$v)
+                        },
+                        expression: "element.value"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("div", [
+                      ["radio", "select", "checkbox"].includes(
+                        element.input_type
+                      )
+                        ? _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: element.options,
+                                expression: "element.options"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: {
+                              type: "text",
+                              placeholder: "type options"
+                            },
+                            domProps: { value: element.options },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  element,
+                                  "options",
+                                  $event.target.value
+                                )
+                              }
                             }
-                            _vm.$set(element, "options", $event.target.value)
-                          }
-                        }
-                      })
-                    : _vm._e()
-                ])
-              ],
-              1
+                          })
+                        : _vm._e()
+                    ])
+                  ],
+                  1
+                )
+              ]
             )
           }),
           0
         ),
         _vm._v(" "),
-        _c("div", { staticClass: "col-md-6 text-end" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-success ",
-              class: _vm.list2.length === 0 ? "disabled" : "",
-              attrs: { type: "button" },
-              on: { click: _vm.submitForm }
-            },
-            [_vm._v("Submit ")]
-          )
+        _c("div", { staticClass: "panel-default" }, [
+          _c("div", { staticClass: "d-flex justify-content-center" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-success ",
+                attrs: { type: "button" },
+                on: { click: _vm.submitForm }
+              },
+              [_vm._v("Submit\n                ")]
+            )
+          ])
         ])
       ],
       1
@@ -42534,25 +42639,33 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "form-group" }, [
+    _c("label", { attrs: { for: "exampleFormControlTextarea2" } }),
+    _vm._v(" "),
+    _c("textarea", {
+      directives: [
+        {
+          name: "model",
+          rawName: "v-model",
+          value: _vm.radioInputs,
+          expression: "radioInputs"
+        }
+      ],
+      staticClass: "form-control rounded-0",
+      attrs: { id: "exampleFormControlTextarea2", rows: "3" },
+      domProps: { value: _vm.radioInputs },
+      on: {
+        input: function($event) {
+          if ($event.target.composing) {
+            return
+          }
+          _vm.radioInputs = $event.target.value
+        }
+      }
+    })
+  ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c("label", { attrs: { for: "exampleFormControlTextarea2" } }, [
-        _vm._v("Small textarea")
-      ]),
-      _vm._v(" "),
-      _c("textarea", {
-        staticClass: "form-control rounded-0",
-        attrs: { id: "exampleFormControlTextarea2", rows: "3" }
-      })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

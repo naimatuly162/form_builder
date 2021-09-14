@@ -10,23 +10,29 @@
                 :clone="cloneDog"
                 item-key="name"
             >
-<!--                <transition-group>
-                    <div>
-                        <ul class="list-group" v-for="element in list1" :key="element.id">
-                            <li class="list-group-item">{{ element.name }}</li>
-                        </ul>
-                    </div>
-                </transition-group>-->
-
+                <!--                <transition-group>
+                                    <div>
+                                        <ul class="list-group" v-for="element in list1" :key="element.id">
+                                            <li class="list-group-item">{{ element.name }}</li>
+                                        </ul>
+                                    </div>
+                                </transition-group>-->
                 <transition-group>
-                    <div v-for="(element,index) in list1" :key="index" >
-                        <li class="list-group-item">{{element.name}}</li>
+                    <div v-for="(element,index) in list1" :key="index" class="panel panel-default">
+                        <li class="list-group-item">{{ element.name }}</li>
                     </div>
                 </transition-group>
             </draggable>
         </div>
+
+
         <div class="col-6 ">
-            <h3>Draggable 2</h3>
+            <h3>Questions Paper</h3>
+
+            <div class="mb-5">
+                <input class="form-control" v-model="formTitle" placeholder="type options">
+            </div>
+
             <draggable
                 class="dragArea list-group border p-5"
                 :list="list2"
@@ -34,19 +40,33 @@
                 @change="log"
                 item-key="name"
             >
-                <div class="list-group" v-for="(element,index) in list2" :key="element.index">
-                    {{ element.type }}
-                    <component :is="`${element.type}_input`" :name="element.type"
-                                :inputType="element.input_type" v-model="element.value"  @abc="texting">
-                    </component>
-                    <div>
-                        <input v-if="['radio', 'select','check'].includes(element.input_type)" type="text" v-model="element.options" class="form-control">
-                    </div>
 
+                <div class="list-group" v-for="(element,index) in list2" :key="element.index"
+                     style="margin-bottom: 15px">
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between" style="margin-bottom: 15px">
+                            <h5>{{ element.type }}</h5>
+                            <div><span class="text-danger" aria-label="close" @click="deleteItem(index)"><i
+                                class="fa fa-trash"></i></span></div>
+                        </div>
+                        <component :is="`${element.type}_input`" :name="element.type"
+                                   :inputType="element.input_type" v-model="element.value" @abc="texting">
+                        </component>
+                        <div>
+                            <input class="form-control"
+                                   v-if="['radio', 'select','checkbox'].includes(element.input_type)" type="text"
+                                   v-model="element.options" placeholder="type options">
+                        </div>
+                    </li>
                 </div>
             </draggable>
-            <div class="col-md-6 text-end">
-                <button class="btn btn-success " :class="list2.length === 0 ? 'disabled' : ''" type="button" @click="submitForm" >Submit </button>
+            <div class="panel-default">
+                <div class="d-flex justify-content-center">
+                    <button class="btn btn-success "
+                            type="button"
+                            @click="submitForm">Submit
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -65,9 +85,9 @@ export default {
     components: {
         Input,
         draggable,
-        'text_input':Input,
-        'select_input':Select,
-        'text_area_input':TextArea,
+        'text_input': Input,
+        'select_input': Select,
+        'textarea_input': TextArea,
     },
     data() {
         return {
@@ -81,6 +101,7 @@ export default {
                 // { name: "Edgard", id: 6 },
                 // { name: "Johnson", id: 7 }
             ],
+            formTitle: ''
         };
     },
     mounted() {
@@ -90,50 +111,63 @@ export default {
                 .catch((error) => this.errors = error.response.data.errors)
             console.log('mounted')
         }
-        // axios.post('/store',this.$data.list2)
-        //     .then((response )=>  {
-        //         console.log(response);
-        //     })
-        //     .catch((error)=> this.errors= error.response.data.errors)
+        axios.post('/getInput')
+            .then((response) => this.list2 = this.element = response.data
+                // console.log(response);
+            )
+            .catch((error) => this.errors = error.response.data.errors)
     },
     methods: {
         log: function (evt) {
             window.console.log(evt);
         },
-        cloneDog({id, name,type,value}) {
+
+        // vClone({id, form_name}) {
+        //     return {
+        //         id: id,
+        //        form_name: '',
+        //     };
+        // },
+
+        cloneDog({id, name, type, value}) {
             let input_type = type;
-            if (!['text', 'select', 'text_area'].includes(input_type)) {
+            if (!['text', 'select', 'textarea'].includes(input_type)) {
                 type = 'text'
-                console.log(id, name,type,value)
+                console.log(id, name, type, value)
             }
             return {
                 id: id,
                 title: name,
                 type: type,
                 value: '',
-                options:'',
+                options: '',
                 input_type: input_type,
             };
         },
-        texting(e){
+        texting(e) {
             console.log('gh', e)
-            this.list2[0].options=e
+            this.list2[0].options = e
             // axios.post('/store',this.list2)
             //     .then((response)=>  {
             //         console.log(response);
             //     })
             //     .catch((error)=> this.errors= error.response.data.errors)
         },
-        submitForm(){
+        submitForm() {
 
-          //  this.$emit('input_type', this.list2)
+            //  this.$emit('input_type', this.list2)
+            let formData = {'form_title': this.formTitle, 'questions': this.list2}
 
-            axios.post('/store',this.list2)
-               .then((response)=>  {
-                   console.log(response);
-               })
-               .catch((error)=> this.errors= error.response.data.errors)
+            axios.post('/store', formData)
+                .then((response) => {
+                    console.log(response);
+                })
+                .catch((error) => this.errors = error.response.data.errors)
         },
+        deleteItem(id) {
+            this.list2.splice(id, 1)
+        },
+
     }
 };
 </script>

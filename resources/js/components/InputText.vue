@@ -1,11 +1,11 @@
 <template>
-    <div>
-        <div class="form-outline">
-            <input v-model="radioInputs" type="text" id="form1" class="form-control" placeholder="type name"/>
-            <label class="form-label" for="form1"></label>
-        </div>
 
+    <div>
+        <input v-model="radioInputs" type="text" id="form1" class="form-control" placeholder="type name"/>
+        <label class="form-label" for="form1"></label>
     </div>
+
+
     <!--    <div>-->
     <!--    <div class="form-check">-->
     <!--        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">-->
@@ -19,12 +19,11 @@
 <script>
 export default {
     name: 'Input',
-    props: ['inputType', 'select_options', 'value', 'name'],
+    props: ['inputType', 'options', 'value', 'name'],
 
     data() {
         return {
             id: 1,
-
         }
     },
     mounted() {
